@@ -8,6 +8,8 @@ def asignarJugadores():
     """
     cantidadJugadores = int(input('Ingresar la cantidad de jugadores que van a jugar: '))
     dic = {}
+    while cantidadJugadores not in range (1,11):
+        cantidadJugadores = int(input('Valor no valido!Ingrese nuevamente la cantidad de jugadores que van a jugar: '))
     for i in range(0, cantidadJugadores):
         jugador = input('Ingrese el nombre del jugador: ')
         dic[jugador] = [0, 0, 0]
@@ -20,11 +22,11 @@ def organizarJugadores(dic):
     Ordena los jugadores por puntaje, y devuelve una lista con una lista que tiene el nombre y el puntaje
 
     """
-    ordenarDic = sorted(dic.items(), key = lambda x:x[1][2], reverse = True)
+    ordenarDic = sorted(dic.items(), key = lambda x:x[1][0], reverse = True)
     listaJuagadorPuntaje = []
     for tupla in ordenarDic:
         jugador = tupla[0]
-        puntaje = tupla[1][2]
+        puntaje = tupla[1][0]
         listaIndividual = [jugador,puntaje]
         listaJuagadorPuntaje.append(listaIndividual)
     return listaJuagadorPuntaje
