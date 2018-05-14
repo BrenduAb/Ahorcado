@@ -22,7 +22,7 @@ def solicitarLongitudDePalabra(listaJugadores, listaPalabrasGenerales):
     Pide la longitud de la palabra. Luego pide las palabras al texto y se las asigna a cada jugador en la lista de listas
     Creando una nueva lista de listas, que contenga para cada jugador:
 
-    [ Nombre del jugador,  Palabra a Adivinar,  Progreso de Palabra,  Desaciertos restantes,  Aciertos,  Puntaje]
+    [ Nombre del jugador,  Palabra a Adivinar,  Progreso de Palabra,  Desaciertos restantes,  Aciertos,  Puntaje, Letras Ingresadas]
 
     DesaciertosRestantes inicia en 7
     Aciertos en 0
@@ -51,7 +51,7 @@ def solicitarLongitudDePalabra(listaJugadores, listaPalabrasGenerales):
             listaDeJugadoresCompleta = []
 
             for i in range(cantidadJugadores):
-                auxList = [listaJugadores[i][0], listaPalabrasJuego[i], palabraProceso, 7, 0, listaJugadores[i][1]]
+                auxList = [listaJugadores[i][0], listaPalabrasJuego[i], palabraProceso, 7, 0, listaJugadores[i][1], ""]
                 listaDeJugadoresCompleta.append(auxList)
 
             return listaDeJugadoresCompleta
@@ -72,7 +72,7 @@ def darTurno(lista):
         if lista[contador][3] > 0:
             lista = turno(lista, contador)
         else:
-            print ("No quedan mas desaciertos restantes")
+            print ("Jugador: ", lista[contador][0], "No quedan mas desaciertos restantes")
         contador += 1
 
         if contador == cantidadJugadores:
@@ -81,7 +81,7 @@ def darTurno(lista):
     return lista
 
 
-def turno(lista, contador): # Funcion complicada, tendra subdivisiones. Suerte
+def turno(lista, contador):
     """
     Autor = Brenda
     Pide el ingreso de un caracter, verifica si esta en la palabra. Imprime el turno. \
@@ -91,6 +91,7 @@ def turno(lista, contador): # Funcion complicada, tendra subdivisiones. Suerte
 
     print ("Ahora es el turno de: ", lista[contador][0])
     print ("Palabra:     ", lista[contador][2])
+    print ("Letras ingresadas: ", lista[contador][6])
 
     termino = False
     valido = False
@@ -102,50 +103,46 @@ def turno(lista, contador): # Funcion complicada, tendra subdivisiones. Suerte
                 print("Por favor ingrese un caracter valido")
             else:
                 valido = True
+                c = c.upper()
 
-        print(1)
-        print (lista)
-        print(lista[contador][2])
-
-
-        aux = verificarCaracter(c.upper(), lista[contador][1], lista[contador][2])
-
-        print(2)
-        print (lista)
-        print(lista[contador][2])
-
-        if aux == lista[contador][2]:
-            print("Esa letra no se encuentra")
-            # Desaciertos restantes
-            lista[contador][3] -= 1
-            # Puntaje
-            lista[contador][5] -= 2
-            termino = True
+        if c in lista[contador][6]:
+            print ("Este caracter ya fue ingresado. Reintente.")
         else:
-            print ("entro")
-            print(lista[contador][2])
 
-            lista[contador][2] = aux
+            if c in lista[contador][1]:
+                aux = cambiarCaracter(c, lista[contador][1], lista[contador][2])
+                lista[contador][2] = aux
 
-            print ("Palabra: ", aux)
-            # Puntaje
-            lista[contador][5] += 1
-            # Aciertos
-            lista[contador][4] += 1
-            print ("Muy bien! Tienes otra posibilicad")
-            valido = False
+                print("Palabra: ", aux)
+                # Puntaje
+                lista[contador][5] += 1
+                # Aciertos
+                lista[contador][4] += 1
+                print("Muy bien! ")
+				print ("Palabra:     ", lista[contador][2])
+    			print ("Letras ingresadas: ", lista[contador][6])
+                
+				valido = False
 
-            if lista[contador][2] == lista[contador][1]:
+            else:
+                print("Esa letra no se encuentra")
+                lista[contador][6] += c + " "
+
+                # Desaciertos restantes
+                lista[contador][3] -= 1
+                # Puntaje
+                lista[contador][5] -= 2
                 termino = True
 
-        print(3)
-        print (lista)
-        print (lista[contador][2])
+        if lista[contador][2] == lista[contador][1]:
+            termino = True
 
+		if not termino:
+			print("Tienes otra posibilidad")
     return lista
 
 
-def verificarCaracter(c, palabra, progreso):
+def cambiarCaracter(c, palabra, progreso):
     """Autor = Brenda.
         Verifica si se encuentra el caracter en la palabra, si es asi lo reemplaza.
     """
@@ -172,7 +169,8 @@ def verificarGanador(lista):
     cantidadJugadores = len(lista)
     contador = 0
 
-    while not ganador and contador < cantidadJugadores :
+
+    while not ganador and contador < cantidadJugadores:
         if lista[contador][1] == lista[contador][2]:
             print("GANADOR: ", lista[contador][0])
             ganador = True
@@ -201,5 +199,3 @@ def finalizarPartida(listaPartida, datosGenerales):
         return True
     else:
         return False
-
-    
